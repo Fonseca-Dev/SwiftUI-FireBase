@@ -43,6 +43,11 @@ struct SignInView: View {
                     )
                     .padding(.bottom, 30)
                 
+                if(viewModel.isLoading){
+                    ProgressView()
+                        .padding()
+                }
+                
                 Button(
                     action: {viewModel.signIn()},
                     label: {Text("Entrar")
@@ -53,6 +58,9 @@ struct SignInView: View {
                             .cornerRadius(24.0)
                     }
                 )
+                .alert(isPresented: $viewModel.formInvalid){
+                    Alert(title: Text(viewModel.alertText))
+                }
                 
                 Divider()
                     .padding()

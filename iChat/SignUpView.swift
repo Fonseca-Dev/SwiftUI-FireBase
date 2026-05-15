@@ -6,17 +6,40 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct SignUpView: View {
     
     @StateObject var viewModel = SignUpViewModel()
+    @State var isShowPhotoLibrary: Bool = false
 
     var body: some View {
         VStack{
-            Image("chat_logo")
-                .resizable()
-                .scaledToFit()
-                .padding()
+            Button {
+                isShowPhotoLibrary = true
+            } label: {
+                if(viewModel.image != nil ){
+                    Image(uiImage: viewModel.image!)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 130, height: 130)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color("GreenColor"),
+                                                lineWidth: 4))
+                        .shadow(radius: 7)
+                }else {
+                    Text("Foto")
+                        .frame(width: 130, height: 130)
+                        .background(Color("GreenColor"))
+                        .foregroundColor(Color.white)
+                        .cornerRadius(100.0)
+                }
+            }
+            .padding(.bottom,32)
+            .sheet(isPresented: $isShowPhotoLibrary) {
+                ImagePicker(selectedImage: $viewModel.image)
+            }
+
             
             TextField("Entre com seu nome", text: $viewModel.name)
                 .autocorrectionDisabled(true)
@@ -54,6 +77,11 @@ struct SignUpView: View {
                 )
                 .padding(.bottom, 30)
             
+            if(viewModel.isLoading){
+                ProgressView()
+                    .padding()
+            }
+            
             Button(
                 action: {viewModel.signUp()},
                 label: {Text("Entrar")
@@ -68,16 +96,6 @@ struct SignUpView: View {
                 Alert(title: Text(viewModel.alertText))
             }
             
-            Divider()
-                .padding()
-            
-            NavigationLink(
-                destination: SignUpView(),
-                label: {
-                    Text("Não tem uma conta? Clique aqui.")
-                        .foregroundColor(Color.black)
-                }
-            )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal,32)
