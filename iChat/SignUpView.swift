@@ -21,7 +21,7 @@ struct SignUpView: View {
                 if(viewModel.image != nil ){
                     Image(uiImage: viewModel.image!)
                         .resizable()
-                        .scaledToFit()
+                        .scaledToFill()
                         .frame(width: 130, height: 130)
                         .clipShape(Circle())
                         .overlay(Circle().stroke(Color("GreenColor"),

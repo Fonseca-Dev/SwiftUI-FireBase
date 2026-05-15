@@ -9,6 +9,7 @@ import Foundation
 import FirebaseAuth
 import UIKit
 import FirebaseStorage
+import FirebaseFirestore
 
 class SignUpViewModel: ObservableObject {
     
@@ -67,17 +68,37 @@ class SignUpViewModel: ObservableObject {
                         self.isLoading = false
                         return
                     }
+            
             ref.downloadURL { url, error in
                 if let error = error {
                                 print("Erro ao pegar URL:", error.localizedDescription)
                                 self.isLoading = false
                                 return
                             }
-                            
                             print("Upload sucesso:", url?.absoluteString ?? "")
+                guard let url = url else { return }
+                self.createUser(imageUrl: url)
                             self.isLoading = false
             }
-            
         }
+    }
+    
+    private func createUser(imageUrl: URL) {
+        let uid = Auth.auth().currentUser!.uid
+        
+        Firestore.firestore().collection("users")
+            .document(uid)
+            .setData([
+                "name": name,
+                "uuid": uid,
+                "profileUrl": imageUrl.absoluteString
+            ]) { error in
+                if let error = error {
+                    self.isLoading = false
+                    print("Erro ao criar usuário:", error.localizedDescription)
+                    return
+                }
+                print("Usuário criado com sucesso!")
+            }
     }
 }
