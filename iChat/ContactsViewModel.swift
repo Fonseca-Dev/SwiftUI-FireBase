@@ -11,14 +11,21 @@ import FirebaseFirestore
 class ContactsViewModel: ObservableObject {
     
     @Published var contacts: [Contact] = []
+    @Published var isLoading: Bool = false
+    
+    private var isLoaded: Bool = false
     
     func getContacts() {
+        if isLoaded { return }
+        isLoading = true
         Firestore
             .firestore()
             .collection("users")
             .getDocuments(){
                 querySnapshot, error in
                 if let error = error {
+                    self.isLoaded = true
+                    self.isLoading = false
                     print("Error ao buscar contatos: \(error)")
                     return
                 }
@@ -33,6 +40,8 @@ class ContactsViewModel: ObservableObject {
                     self.contacts.append(contact)
                     print("ID \(document.documentID) \(document.data())")
                 }
+                self.isLoaded = true
+                self.isLoading = false
             }
     }
 }
