@@ -10,10 +10,19 @@ import SwiftUI
 struct MessagesView: View {
     @StateObject var viewModel = MessagesViewModel()
     var body: some View {
-        Button{
-            viewModel.logout()
-        } label: {
-            Text("Logout")
+        NavigationStack {
+            VStack {
+                Text("Hello, World!")
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    NavigationLink("Contatos", destination: ContactsView())
+
+                    Button("Logout") {
+                        viewModel.logout()
+                    }
+                }
+            }
         }
     }
 }

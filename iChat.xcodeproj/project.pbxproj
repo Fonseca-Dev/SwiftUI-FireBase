@@ -22,6 +22,11 @@
 		D2294ED62FB7F1CB00DDCA2A /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294ED52FB7F1CB00DDCA2A /* ContentViewModel.swift */; };
 		D2294ED82FB7F60500DDCA2A /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294ED72FB7F60500DDCA2A /* MessagesView.swift */; };
 		D2294EDA2FB7F66000DDCA2A /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294ED92FB7F66000DDCA2A /* MessagesViewModel.swift */; };
+		D2294EDC2FB8997600DDCA2A /* ContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294EDB2FB8997600DDCA2A /* ContactsView.swift */; };
+		D2294EDE2FB89D1B00DDCA2A /* ContactsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294EDD2FB89D1B00DDCA2A /* ContactsViewModel.swift */; };
+		D2294EE02FB89D5B00DDCA2A /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294EDF2FB89D5B00DDCA2A /* Contact.swift */; };
+		D2294EE22FB8A4AD00DDCA2A /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294EE12FB8A4AD00DDCA2A /* Message.swift */; };
+		D2294EE42FB8A4F700DDCA2A /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294EE32FB8A4F700DDCA2A /* ChatViewModel.swift */; };
 		D26127DF2FB769D600CD7235 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26127DE2FB769D600CD7235 /* SignUpView.swift */; };
 		D26127E12FB76B8C00CD7235 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26127E02FB76B8C00CD7235 /* SignUpViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -39,6 +44,11 @@
 		D2294ED52FB7F1CB00DDCA2A /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		D2294ED72FB7F60500DDCA2A /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		D2294ED92FB7F66000DDCA2A /* MessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModel.swift; sourceTree = "<group>"; };
+		D2294EDB2FB8997600DDCA2A /* ContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsView.swift; sourceTree = "<group>"; };
+		D2294EDD2FB89D1B00DDCA2A /* ContactsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModel.swift; sourceTree = "<group>"; };
+		D2294EDF2FB89D5B00DDCA2A /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		D2294EE12FB8A4AD00DDCA2A /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		D2294EE32FB8A4F700DDCA2A /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		D26127DE2FB769D600CD7235 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		D26127E02FB76B8C00CD7235 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,6 +100,11 @@
 				D2294ED52FB7F1CB00DDCA2A /* ContentViewModel.swift */,
 				D2294ED72FB7F60500DDCA2A /* MessagesView.swift */,
 				D2294ED92FB7F66000DDCA2A /* MessagesViewModel.swift */,
+				D2294EDB2FB8997600DDCA2A /* ContactsView.swift */,
+				D2294EDD2FB89D1B00DDCA2A /* ContactsViewModel.swift */,
+				D2294EDF2FB89D5B00DDCA2A /* Contact.swift */,
+				D2294EE12FB8A4AD00DDCA2A /* Message.swift */,
+				D2294EE32FB8A4F700DDCA2A /* ChatViewModel.swift */,
 			);
 			path = iChat;
 			sourceTree = "<group>";
@@ -177,6 +192,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2294ED62FB7F1CB00DDCA2A /* ContentViewModel.swift in Sources */,
+				D2294EDE2FB89D1B00DDCA2A /* ContactsViewModel.swift in Sources */,
 				D26127DF2FB769D600CD7235 /* SignUpView.swift in Sources */,
 				D2294EDA2FB7F66000DDCA2A /* MessagesViewModel.swift in Sources */,
 				D2294ED82FB7F60500DDCA2A /* MessagesView.swift in Sources */,
@@ -185,7 +201,11 @@
 				D26127E12FB76B8C00CD7235 /* SignUpViewModel.swift in Sources */,
 				D2294ECE2FB79FC200DDCA2A /* ImagePicker.swift in Sources */,
 				9C0B9A40270F691D00DF2B5F /* iChatApp.swift in Sources */,
+				D2294EE02FB89D5B00DDCA2A /* Contact.swift in Sources */,
+				D2294EDC2FB8997600DDCA2A /* ContactsView.swift in Sources */,
 				D2194A6D2FB75E78009D20EF /* SignInViewModel.swift in Sources */,
+				D2294EE42FB8A4F700DDCA2A /* ChatViewModel.swift in Sources */,
+				D2294EE22FB8A4AD00DDCA2A /* Message.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,7 +350,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -361,7 +381,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

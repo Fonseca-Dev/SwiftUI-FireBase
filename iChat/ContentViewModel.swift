@@ -12,4 +12,10 @@ class ContentViewModel: ObservableObject {
     
     @Published var isLoggedIn = Auth.auth().currentUser != nil
     
+    func onAppear(){
+        Auth.auth().addStateDidChangeListener { auth, user in
+            self.isLoggedIn = user != nil
+        }
+    }
+    
 }

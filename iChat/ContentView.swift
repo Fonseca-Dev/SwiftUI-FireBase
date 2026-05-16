@@ -5,7 +5,6 @@
 //  Created by Kaue Rocha da Fonseca on 15/05/26.
 //
 
-import Foundation
 import SwiftUI
 
 struct ContentView: View {
@@ -14,10 +13,14 @@ struct ContentView: View {
     
     
     var body: some View {
-        if viewModel.isLoggedIn {
-            MessagesView()
-        } else {
-            SignInView()
+        ZStack{
+            if viewModel.isLoggedIn {
+                MessagesView()
+            } else {
+                SignInView()
+            }
+        }.onAppear {
+            viewModel.onAppear()
         }
     }
 }
