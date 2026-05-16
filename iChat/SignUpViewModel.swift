@@ -42,11 +42,10 @@ class SignUpViewModel: ObservableObject {
                 self.isLoading = false
                 return
             }
-            self.isLoading = false
             print("Usuario criado: \(user.uid)")
-            
             self.uploadPhoto()
         }
+        
     }
     
     private func uploadPhoto() {
@@ -71,14 +70,17 @@ class SignUpViewModel: ObservableObject {
             
             ref.downloadURL { url, error in
                 if let error = error {
-                                print("Erro ao pegar URL:", error.localizedDescription)
-                                self.isLoading = false
-                                return
-                            }
-                            print("Upload sucesso:", url?.absoluteString ?? "")
-                guard let url = url else { return }
+                    print("Erro ao pegar URL:", error.localizedDescription)
+                    self.isLoading = false
+                    return
+                }
+                guard let url = url else {
+                    self.isLoading = false
+                    return
+                }
+
+                print("Upload sucesso:", url.absoluteString)
                 self.createUser(imageUrl: url)
-                            self.isLoading = false
             }
         }
     }
@@ -93,6 +95,7 @@ class SignUpViewModel: ObservableObject {
                 "uuid": uid,
                 "profileUrl": imageUrl.absoluteString
             ]) { error in
+                self.isLoading = false
                 if let error = error {
                     self.isLoading = false
                     print("Erro ao criar usuário:", error.localizedDescription)
@@ -100,5 +103,6 @@ class SignUpViewModel: ObservableObject {
                 }
                 print("Usuário criado com sucesso!")
             }
+        self.isLoading = false
     }
 }

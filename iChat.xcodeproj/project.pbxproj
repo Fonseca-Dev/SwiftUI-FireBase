@@ -18,6 +18,10 @@
 		D2294ECE2FB79FC200DDCA2A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294ECD2FB79FC200DDCA2A /* ImagePicker.swift */; };
 		D2294ED02FB7A5FD00DDCA2A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D2294ECF2FB7A5FD00DDCA2A /* FirebaseStorage */; };
 		D2294ED22FB7AD0F00DDCA2A /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D2294ED12FB7AD0F00DDCA2A /* FirebaseFirestore */; };
+		D2294ED42FB7F0A700DDCA2A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294ED32FB7F0A700DDCA2A /* ContentView.swift */; };
+		D2294ED62FB7F1CB00DDCA2A /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294ED52FB7F1CB00DDCA2A /* ContentViewModel.swift */; };
+		D2294ED82FB7F60500DDCA2A /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294ED72FB7F60500DDCA2A /* MessagesView.swift */; };
+		D2294EDA2FB7F66000DDCA2A /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294ED92FB7F66000DDCA2A /* MessagesViewModel.swift */; };
 		D26127DF2FB769D600CD7235 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26127DE2FB769D600CD7235 /* SignUpView.swift */; };
 		D26127E12FB76B8C00CD7235 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26127E02FB76B8C00CD7235 /* SignUpViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -31,6 +35,10 @@
 		D2194A6C2FB75E78009D20EF /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		D2294EC62FB77BE000DDCA2A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D2294ECD2FB79FC200DDCA2A /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		D2294ED32FB7F0A700DDCA2A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D2294ED52FB7F1CB00DDCA2A /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		D2294ED72FB7F60500DDCA2A /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
+		D2294ED92FB7F66000DDCA2A /* MessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModel.swift; sourceTree = "<group>"; };
 		D26127DE2FB769D600CD7235 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		D26127E02FB76B8C00CD7235 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,6 +86,10 @@
 				D2194A6C2FB75E78009D20EF /* SignInViewModel.swift */,
 				D26127DE2FB769D600CD7235 /* SignUpView.swift */,
 				D26127E02FB76B8C00CD7235 /* SignUpViewModel.swift */,
+				D2294ED32FB7F0A700DDCA2A /* ContentView.swift */,
+				D2294ED52FB7F1CB00DDCA2A /* ContentViewModel.swift */,
+				D2294ED72FB7F60500DDCA2A /* MessagesView.swift */,
+				D2294ED92FB7F66000DDCA2A /* MessagesViewModel.swift */,
 			);
 			path = iChat;
 			sourceTree = "<group>";
@@ -164,8 +176,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2294ED62FB7F1CB00DDCA2A /* ContentViewModel.swift in Sources */,
 				D26127DF2FB769D600CD7235 /* SignUpView.swift in Sources */,
+				D2294EDA2FB7F66000DDCA2A /* MessagesViewModel.swift in Sources */,
+				D2294ED82FB7F60500DDCA2A /* MessagesView.swift in Sources */,
 				9C0B9A42270F691D00DF2B5F /* SignInView.swift in Sources */,
+				D2294ED42FB7F0A700DDCA2A /* ContentView.swift in Sources */,
 				D26127E12FB76B8C00CD7235 /* SignUpViewModel.swift in Sources */,
 				D2294ECE2FB79FC200DDCA2A /* ImagePicker.swift in Sources */,
 				9C0B9A40270F691D00DF2B5F /* iChatApp.swift in Sources */,
