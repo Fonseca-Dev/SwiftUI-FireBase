@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ChatView: View {
     
+    let toContactId: String
     let contactName: String
     
     @StateObject private var viewModel = ChatViewModel()
@@ -35,7 +36,7 @@ struct ChatView: View {
                             .strokeBorder(Color(UIColor.separator),style: StrokeStyle(lineWidth: 1.0))
                     )
                 
-                Button(action: {}) {
+                Button(action: {viewModel.sendMessage(toId: toContactId)}) {
                     Image(systemName: "paperplane")
                         .padding()
                         .background(Color("GreenColor"))
@@ -44,11 +45,13 @@ struct ChatView: View {
                 }
                 .disabled(viewModel.newMessage.isEmpty)
             }
-            .padding(.vertical, 10)
-            .padding(.horizontal, 16)
         }
+        .padding()
         .navigationTitle(contactName)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear() {
+            viewModel.onAppear(toId: toContactId)
+        }
     }
 }
 
@@ -57,17 +60,18 @@ struct MessageRow : View {
     let message: Message
     
     var body: some View {
-        Text(message.text)
-            .background(Color(white: 0.95))
-            .frame(maxWidth: .infinity, alignment: message.isMe ? .leading : .trailing)
-            .lineLimit(nil)
-            .fixedSize(horizontal: false, vertical: true)
-            .padding(.leading, message.isMe ? 0 : 150)
-            .padding(.trailing, message.isMe ? 150 : 0)
-            .padding(.vertical, 5)
+            Text(message.text)
+                .background(Color(white: 0.95))
+                .frame(maxWidth: .infinity, alignment: message.isMe ? .trailing : .leading) // trailing (alinhamento a direita), leading (alinhamento a esquerda)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.leading, message.isMe ? 100 : 0)
+                .padding(.trailing, message.isMe ? 0 : 100)
+                .padding(.vertical, 5)
+        
     }
 }
 
 #Preview {
-    ChatView(contactName: "Kaue")
+    ChatView(toContactId: "1", contactName: "Kaue")
 }
