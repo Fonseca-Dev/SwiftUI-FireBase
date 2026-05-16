@@ -9,10 +9,10 @@ import SwiftUI
 
 struct ChatView: View {
     
-    let toContactId: String
-    let contactName: String
+    let contact: Contact
     
     @StateObject private var viewModel = ChatViewModel()
+    @State private var textSize: CGSize = .zero
     
     var body: some View {
         VStack {
@@ -25,18 +25,33 @@ struct ChatView: View {
             Spacer()
             
             HStack {
-                TextField("Type a message", text: $viewModel.newMessage)
-                    .autocorrectionDisabled(true)
-                    .autocapitalization(.none)
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(24.0)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 24.0)
-                            .strokeBorder(Color(UIColor.separator),style: StrokeStyle(lineWidth: 1.0))
-                    )
+                ZStack{
+                    TextEditor(text: $viewModel.newMessage)
+                        .scrollContentBackground(.hidden)
+                        .autocorrectionDisabled(true)
+                        .autocapitalization(.none)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 8)
+                        .background(Color.white)
+                        .cornerRadius(24.0)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 24.0)
+                                .strokeBorder(Color(UIColor.separator),style: StrokeStyle(lineWidth: 1.0))
+                        )
+                        .frame(minHeight: 50,
+                               maxHeight: textSize.height > 20 ? min(textSize.height + 30, 100) : 50)
+                    
+                    Text(viewModel.newMessage)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .background(ViewGeometry())
+                        .lineLimit(4)
+                        .hidden()
+                        .onPreferenceChange(ViewSizeKey.self){ size in
+                            textSize = size
+                        }
+                }
                 
-                Button(action: {viewModel.sendMessage(toId: toContactId)}) {
+                Button(action: {viewModel.sendMessage(toContact: contact)}) {
                     Image(systemName: "paperplane")
                         .padding()
                         .background(Color("GreenColor"))
@@ -47,11 +62,26 @@ struct ChatView: View {
             }
         }
         .padding()
-        .navigationTitle(contactName)
+        .navigationTitle(contact.name)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear() {
-            viewModel.onAppear(toId: toContactId)
+            viewModel.onAppear(toContact: contact)
         }
+    }
+}
+
+struct ViewGeometry: View {
+    var body: some View {
+        GeometryReader { geometry in
+            Color.clear.preference(key: ViewSizeKey.self, value: geometry.size)
+        }
+    }
+}
+
+struct ViewSizeKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
     }
 }
 
@@ -73,5 +103,11 @@ struct MessageRow : View {
 }
 
 #Preview {
-    ChatView(toContactId: "1", contactName: "Kaue")
+    ChatView(
+        contact: Contact(
+            uuid: "1",
+            name: "User 1",
+            profileUrl: "String",
+        )
+    )
 }

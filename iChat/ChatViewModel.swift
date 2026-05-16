@@ -27,14 +27,36 @@ class ChatViewModel: ObservableObject {
     
     @Published var newMessage: String = ""
     
-    func onAppear(toId: String){
+    var myName = ""
+    var myPhoto = ""
+    
+    func onAppear(toContact: Contact){
         guard let fromId = Auth.auth().currentUser?.uid else { return }
+        
+        // Isso serve para buscar na Colecao "users" o nome e a Url da foto do usuario
+        Firestore
+            .firestore()
+            .collection("users")
+            .document(fromId)
+            .getDocument{ querySnapshot, error in
+                if let error = error {
+                    print("ERROR: fetching documents \(error)")
+                    return
+                }
+                
+                if let data = querySnapshot?.data(){
+                    self.myName = data["name"] as! String
+                    self.myPhoto = data["profileUrl"] as! String
+                }
+                
+            }
+        
         
         Firestore
             .firestore()
             .collection("chats")
             .document(fromId)
-            .collection(toId)
+            .collection(toContact.uuid)
             .order(by: "timestamp", descending: false)
             .addSnapshotListener { querySnapshot, error in // Esse daqui é o responsavel por ficar ouvindo as alteracoes no banco de dados
                 if let error = error {
@@ -59,7 +81,7 @@ class ChatViewModel: ObservableObject {
             }
     }
     
-    func sendMessage(toId : String){
+    func sendMessage(toContact : Contact){
         guard let fromId = Auth.auth().currentUser?.uid else { return } // Busca o id do usuario que esta enviando a mensagem
         let timestamp = Date().timeIntervalSince1970 // Busca o horario em segundos do momento em que esta sendo enviado a mensagem
         
@@ -67,12 +89,12 @@ class ChatViewModel: ObservableObject {
         Firestore
             .firestore()
             .collection("chats") // Criacao da colecao chats(Conversas)
-            .document(fromId) // Nessa colecao vai ter um remetente
-            .collection(toId) // Criacao da colecao para quem as mensagens estao sendo enviadas
+            .document(fromId) // Que tem o remetente
+            .collection(toContact.uuid) // Criacao da colecao com id do destinatario para ter um unico chat vinculado aos dois usuarios
             .addDocument(data: [
                 "message": newMessage,
                 "fromId": fromId,
-                "toId": toId,
+                "toId": toContact.uuid,
                 "timestamp": UInt(timestamp) // Unidade de inteiro que não aceita numeros negativos
             ]) { error in
                 if error != nil {
@@ -80,24 +102,53 @@ class ChatViewModel: ObservableObject {
                     return
                 }
                 
+                // Aqui é gerado a coleçao de last-messages
+                Firestore
+                    .firestore()
+                    .collection("last-messages")
+                    .document(fromId) // Que tem o remetente
+                    .collection("contacts") // Cria um colecao de contatos com quem ja trocou mensagem
+                    .document(toContact.uuid) // Vincula o destinatario a essa colecao
+                    .setData([
+                        "uuid": toContact.uuid,
+                        "name": toContact.name,
+                        "profileUrl": toContact.profileUrl,
+                        "timestamp": UInt(timestamp),
+                        "lastMessage": self.newMessage
+                    ])
             }
         
         // Aqui eu crio uma colecao para quem ta recebendo a mensagem
         Firestore
             .firestore()
             .collection("chats") // Criacao da colecao chats(Conversas)
-            .document(toId) // Nessa colecao vai ter um destinatario
-            .collection(fromId) // Criacao da colecao para quem as mensagens estao sendo recebidas
+            .document(toContact.uuid) // Que tem o destinatario
+            .collection(fromId) // Criacao da colecao com id do remetente para ter um unico chat vinculado aos dois usuarios
             .addDocument(data: [
                 "message": newMessage,
                 "fromId": fromId,
-                "toId": toId,
+                "toId": toContact.uuid,
                 "timestamp": UInt(timestamp) // Unidade de inteiro que não aceita numeros negativos
             ]) { error in
                 if error != nil {
                     print("Error adding document: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
+                
+                // Aqui é gerado a coleçao de last-messages
+                Firestore
+                    .firestore()
+                    .collection("last-messages")
+                    .document(toContact.uuid) // Que tem o destinatario
+                    .collection("contacts") // Cria um colecao de contatos com quem ja trocou mensagem
+                    .document(fromId) // Vincula o remetente a essa colecao
+                    .setData([
+                        "uuid": fromId,
+                        "name": self.myName,
+                        "profileUrl": self.myPhoto,
+                        "timestamp": UInt(timestamp),
+                        "lastMessage": self.newMessage
+                    ])
                 
             }
         
