@@ -47,6 +47,9 @@ struct ChatView: View {
                         }
                     }
                 }
+                .simultaneousGesture(DragGesture().onChanged({ _ in
+                    UIApplication.shared.endEditting()
+                }))
                 .rotationEffect(Angle(degrees: 180.0))
                 .scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                 
@@ -122,14 +125,22 @@ struct MessageRow : View {
     let message: Message
     
     var body: some View {
+        VStack(alignment: .leading){
             Text(message.text)
-                .background(Color(white: 0.95))
-                .frame(maxWidth: .infinity, alignment: message.isMe ? .trailing : .leading) // trailing (alinhamento a direita), leading (alinhamento a esquerda)
+                .padding(.vertical, 5)
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
-                .padding(.leading, message.isMe ? 100 : 0)
-                .padding(.trailing, message.isMe ? 0 : 100)
-                .padding(.vertical, 5)
+                .padding(.horizontal, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 10.0)
+                        .fill(!message.isMe ? Color(white: 0.95) : Color("GreenLightColor"))
+                )
+                .frame(maxWidth: 260, alignment: message.isMe ? .trailing : .leading)
+            // trailing (alinhamento a direita), leading (alinhamento a esquerda)
+                
+        }
+        .padding(.horizontal, 2)
+        .frame(maxWidth: .infinity, alignment: message.isMe ? .trailing : .leading)
         
     }
 }
