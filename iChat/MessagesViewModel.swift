@@ -13,43 +13,52 @@ class MessagesViewModel:ObservableObject {
     
     @Published var isLoading:Bool = false
     @Published var contacts: [Contact] = []
-    private var isLoaded: Bool = false
+    private var listener: ListenerRegistration?
+
 
     
     func getContacts() {
-        if isLoaded { return }
-        isLoading = true
         guard let fromId = Auth.auth().currentUser?.uid else { return }
         
-        Firestore
+        if listener != nil { return }
+        
+        isLoading = true
+
+        
+        listener = Firestore
             .firestore()
             .collection("last-messages")
             .document(fromId)
             .collection("contacts")  // Busca todos os usuarios que trocaram mensagem com o usuario logado
+            .order(by: "timestamp", descending: true)
             .addSnapshotListener{ (querySnapshot, error) in
-                if let changes = querySnapshot?.documentChanges {
-                    self.contacts.removeAll()
-                    for doc in changes {
-                        if doc.type == .added {
-                            let document = doc.document
-                            print(document.data())
-                            
-                            self.contacts.append(
-                                Contact(
-                                    uuid: document.documentID,
-                                    name: document.data()["name"] as? String ?? "",
-                                    profileUrl: document.data()["profileUrl"] as? String ?? "",
-                                    lastMessage: document.data()["lastMessage"] as? String,
-                                    timestamp: document.data()["timestamp"] as? UInt
-                                )
-                            )
-                        }
-                    }
-                    self.isLoaded = true
+                
+                if let error =
+                    error {
+                    print("Erro ao buscar mensagens:", error.localizedDescription)
                     self.isLoading = false
+                    return
                 }
+                
+                guard let documents = querySnapshot?.documents else {
+                                    self.isLoading = false
+                                    return
+                                }
+                
+                self.contacts = documents.map { document in
+                                    let data = document.data()
+                    print(data)
+                    return Contact(
+                                            uuid: document.documentID,
+                                            name: data["name"] as? String ?? "",
+                                            profileUrl: data["profileUrl"] as? String ?? "",
+                                            lastMessage: data["lastMessage"] as? String,
+                                            timestamp: data["timestamp"] as? UInt
+                                        )
+                                    }
+                
+                self.isLoading = false
             }
-        
     }
     
     

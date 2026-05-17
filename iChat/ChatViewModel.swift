@@ -29,6 +29,10 @@ class ChatViewModel: ObservableObject {
     
     var myName = ""
     var myPhoto = ""
+    var inserting: Bool = false
+    var newCount: Int = 0
+    let limit = 10
+    
     
     func onAppear(toContact: Contact){
         guard let fromId = Auth.auth().currentUser?.uid else { return }
@@ -57,7 +61,9 @@ class ChatViewModel: ObservableObject {
             .collection("chats")
             .document(fromId)
             .collection(toContact.uuid)
-            .order(by: "timestamp", descending: false)
+            .order(by: "timestamp", descending: true) // Ordenacao do mais novo para o mais antigo -> Mais novo = timestamp maior, Mais velho = timestamp menor
+            .start(at: [self.messages.last?.timestamp ?? 9999999999999]) // Para comecar na proxima interacao
+            .limit(to: limit) // Quantos elementos ele vai fazer nessa busca
             .addSnapshotListener { querySnapshot, error in // Esse daqui é o responsavel por ficar ouvindo as alteracoes no banco de dados
                 if let error = error {
                     print("ERROR: fetching documents \(error)")
@@ -66,22 +72,38 @@ class ChatViewModel: ObservableObject {
                 
                 if let changes = querySnapshot?.documentChanges {
                     for documentChange in changes {
-                        let document = documentChange.document
-                        
-                        print ("Document is: \(document.documentID) \(document.data())")
-                        
-                        let message = Message(
-                            uuid: document.documentID,
-                            text: document.data()["message"] as! String,
-                            isMe: fromId == (document.data()["fromId"] as! String),
+                        if documentChange.type == .added {
+                            let document = documentChange.document
+                            
+                            print ("Document is: \(document.documentID) \(document.data())")
+                            
+                            let message = Message(
+                                uuid: document.documentID,
+                                text: document.data()["message"] as! String,
+                                isMe: fromId == (document.data()["fromId"] as! String),
+                                timestamp: document.data()["timestamp"] as! UInt
                             )
-                        self.messages.append(message)
+                            if self.inserting{
+                                self.messages.insert(message, at: 0)
+                            } else {
+                                if(document.documentID != self.messages.last?.uuid){
+                                    self.messages.append(message)
+                                }
+                            }
+                        }
                     }
+                    print("-------")
+                    self.inserting = false
                 }
+                self.newCount = self.messages.count
             }
     }
     
     func sendMessage(toContact : Contact){
+        let newMessage = self.newMessage
+        inserting = true
+        newCount = newCount + 1
+        self.newMessage = ""
         guard let fromId = Auth.auth().currentUser?.uid else { return } // Busca o id do usuario que esta enviando a mensagem
         let timestamp = Date().timeIntervalSince1970 // Busca o horario em segundos do momento em que esta sendo enviado a mensagem
         
@@ -114,7 +136,7 @@ class ChatViewModel: ObservableObject {
                         "name": toContact.name,
                         "profileUrl": toContact.profileUrl,
                         "timestamp": UInt(timestamp),
-                        "lastMessage": self.newMessage
+                        "lastMessage": newMessage
                     ])
             }
         
@@ -147,11 +169,9 @@ class ChatViewModel: ObservableObject {
                         "name": self.myName,
                         "profileUrl": self.myPhoto,
                         "timestamp": UInt(timestamp),
-                        "lastMessage": self.newMessage
+                        "lastMessage": newMessage
                     ])
                 
-            }
-        
-            newMessage = ""
+            }        
     }
 }

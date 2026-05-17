@@ -20,18 +20,35 @@ struct ChatView: View {
         VStack {
             ScrollViewReader { value in
                 ScrollView(showsIndicators: false) {
-                    ForEach(viewModel.messages, id: \.self){ message in
-                        MessageRow(message: message)
-                    }
-                    .onChange(of: viewModel.messages.count) { newValue in
-                        withAnimation {
-                            value.scrollTo(bottomID)
-                        }
-                    }
-                    
                     Color.clear
                         .id(bottomID)
+                    LazyVStack {
+                        ForEach(viewModel.messages, id: \.self){ message in
+                            MessageRow(message: message)
+                                .scaleEffect(x: 1.0, y: -1.0, anchor: .center)
+                                .onAppear{
+                                    // Só dispara a request quando estiver no ultimo da lista e a quantidade de mensagens for menos do que o limite
+                                    // Para nao ficar fazendo request sem ter atingido o limite
+                                    if message == viewModel.messages.last && viewModel.messages.count >= viewModel.limit {
+                                        viewModel.onAppear(toContact: contact)
+                                    }
+                                }
+                        }
+                        .onChange(of: viewModel.newCount) { newValue in // O newCount só mudará quando houver um inster
+                            print("Count is \(newValue)")
+                            print("Total is \(viewModel.messages.count)")
+                            print("Limit is \(viewModel.limit)")
+                            // Que sera o momento que ocorrera o scroll
+                            if newValue > viewModel.messages.count {
+                                withAnimation {
+                                    value.scrollTo(bottomID)
+                                }
+                            }
+                        }
+                    }
                 }
+                .rotationEffect(Angle(degrees: 180.0))
+                .scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                 
             }
             
