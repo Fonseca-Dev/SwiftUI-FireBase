@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseFirestore
+import FirebaseAuth
 
 class ContactsViewModel: ObservableObject {
     
@@ -31,7 +32,18 @@ class ContactsViewModel: ObservableObject {
                 }
                 
                 for document in querySnapshot!.documents {
+                    guard let myId = Auth.auth().currentUser?.uid else { return }
                     let data = document.data()
+
+                    if myId == document.documentID {
+                        let contact = Contact(
+                            uuid: document.documentID,
+                            name: "Eu",
+                            profileUrl: data["profileUrl"] as! String
+                        )
+                        self.contacts.append(contact)
+                        continue
+                    }
                     let contact = Contact(
                         uuid: document.documentID,
                         name: data["name"] as! String,

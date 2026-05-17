@@ -28,7 +28,6 @@ struct ChatView: View {
                             value.scrollTo(bottomID)
                         }
                     }
-                    .padding(.horizontal, 20)
                     
                     Color.clear
                         .id(bottomID)

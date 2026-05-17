@@ -152,6 +152,6 @@ class ChatViewModel: ObservableObject {
                 
             }
         
-            
+            newMessage = ""
     }
 }
