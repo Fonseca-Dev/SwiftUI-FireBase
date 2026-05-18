@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MessageView: View {
-    @StateObject var viewModel = MessageViewModel()
+    @StateObject var viewModel = MessageViewModel(repo: MessageRepository())
     var body: some View {
         NavigationStack {
             VStack {

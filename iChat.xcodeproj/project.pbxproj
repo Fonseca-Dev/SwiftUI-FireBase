@@ -27,6 +27,8 @@
 		D2294EE42FB8A4F700DDCA2A /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294EE32FB8A4F700DDCA2A /* ChatViewModel.swift */; };
 		D2294EE62FB8A6E900DDCA2A /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294EE52FB8A6E900DDCA2A /* ChatView.swift */; };
 		D2294EFF2FBA773400DDCA2A /* SignUpRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294EFE2FBA773400DDCA2A /* SignUpRepository.swift */; };
+		D2294F012FBB36E900DDCA2A /* MessageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294F002FBB36E900DDCA2A /* MessageRepository.swift */; };
+		D2294F032FBB405400DDCA2A /* ContactRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2294F022FBB405400DDCA2A /* ContactRepository.swift */; };
 		D26127DF2FB769D600CD7235 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26127DE2FB769D600CD7235 /* SignUpView.swift */; };
 		D26127E12FB76B8C00CD7235 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26127E02FB76B8C00CD7235 /* SignUpViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -50,6 +52,8 @@
 		D2294EE52FB8A6E900DDCA2A /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		D2294EE72FB8C41D00DDCA2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D2294EFE2FBA773400DDCA2A /* SignUpRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRepository.swift; sourceTree = "<group>"; };
+		D2294F002FBB36E900DDCA2A /* MessageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRepository.swift; sourceTree = "<group>"; };
+		D2294F022FBB405400DDCA2A /* ContactRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactRepository.swift; sourceTree = "<group>"; };
 		D26127DE2FB769D600CD7235 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		D26127E02FB76B8C00CD7235 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -141,6 +145,7 @@
 			children = (
 				D2294EDB2FB8997600DDCA2A /* ContactView.swift */,
 				D2294EDD2FB89D1B00DDCA2A /* ContactViewModel.swift */,
+				D2294F022FBB405400DDCA2A /* ContactRepository.swift */,
 			);
 			path = Contact;
 			sourceTree = "<group>";
@@ -150,6 +155,7 @@
 			children = (
 				D2294ED72FB7F60500DDCA2A /* MessageView.swift */,
 				D2294ED92FB7F66000DDCA2A /* MessageViewModel.swift */,
+				D2294F002FBB36E900DDCA2A /* MessageRepository.swift */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -268,7 +274,9 @@
 				D26127E12FB76B8C00CD7235 /* SignUpViewModel.swift in Sources */,
 				D2294ECE2FB79FC200DDCA2A /* ImagePicker.swift in Sources */,
 				9C0B9A40270F691D00DF2B5F /* iChatApp.swift in Sources */,
+				D2294F012FBB36E900DDCA2A /* MessageRepository.swift in Sources */,
 				D2294EE02FB89D5B00DDCA2A /* Contact.swift in Sources */,
+				D2294F032FBB405400DDCA2A /* ContactRepository.swift in Sources */,
 				D2294EDC2FB8997600DDCA2A /* ContactView.swift in Sources */,
 				D2294EE42FB8A4F700DDCA2A /* ChatViewModel.swift in Sources */,
 				D2294EE22FB8A4AD00DDCA2A /* Message.swift in Sources */,
