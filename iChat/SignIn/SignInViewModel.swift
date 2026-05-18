@@ -16,18 +16,23 @@ class SignInViewModel: ObservableObject {
     @Published var formInvalid: Bool = false
     @Published var alertText: String = ""
     
+    private let repo: SignInRepository
+    
+    init(repo : SignInRepository){
+        self.repo = repo
+    }
+    
+    
     func signIn() {
         self.isLoading = true
-        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-            guard let user = authResult?.user, error == nil else {
+        repo.signIn(withEmail: email, password: password) { error in
+            if let error = error {
                 self.formInvalid = true
-                self.alertText = error!.localizedDescription
-                print(error ?? "Erro desconhecido")
+                self.alertText = error.localizedCapitalized
                 self.isLoading = false
-                return
+                print(error)
             }
             self.isLoading = false
-            print("Usuario Logado: \(user.uid)")
         }
     }
 }

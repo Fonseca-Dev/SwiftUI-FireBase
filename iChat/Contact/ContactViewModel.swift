@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseFirestore
 import FirebaseAuth
 
-class ContactsViewModel: ObservableObject {
+class ContactViewModel: ObservableObject {
     
     @Published var contacts: [Contact] = []
     @Published var isLoading: Bool = false

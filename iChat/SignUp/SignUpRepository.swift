@@ -1,58 +1,41 @@
 //
-//  SignUpViewModel.swift
+//  SignUpRepository.swift
 //  iChat
 //
-//  Created by Kaue Rocha da Fonseca on 15/05/26.
+//  Created by Kaue Rocha da Fonseca on 17/05/26.
 //
 
 import Foundation
 import FirebaseAuth
-import UIKit
 import FirebaseStorage
 import FirebaseFirestore
+import UIKit
 
-class SignUpViewModel: ObservableObject {
-    
-    @Published var name: String = ""
-    @Published var email: String = ""
-    @Published var password: String = ""
-    @Published var formInvalid = false
-    @Published var alertText: String = ""
-    @Published var isLoading = false
-    @Published var image: UIImage? = nil
-    
-    
-    
-    func signUp() {
-        print("nome: \(name), email: \(email), senha: \(password)")
-        
-        // Para cadastrar é necessario selecionar uma foto
-        if(image?.size.width ?? 0 <= 0){
-            formInvalid = true
-            alertText = "Por favor, insira uma imagem de perfil"
-            return
-        }
-        
-        isLoading = true
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+class SignUpRepository {
+    func signUp(withEmail: String, password: String, image:UIImage?, userName:String, completion: @escaping (String?) -> Void) {
+        Auth.auth().createUser(withEmail: withEmail, password: password) { authResult, error in
             guard let user = authResult?.user, error == nil else {
-                self.formInvalid = true
-                self.alertText = error!.localizedDescription
-                print(error ?? "Erro ao criar usuario")
-                self.isLoading = false
+                completion(error!.localizedDescription)
+                print(error!)
                 return
             }
             print("Usuario criado: \(user.uid)")
-            self.uploadPhoto()
+            self.uploadPhoto(image: image, userName: userName){ error in
+                if let error = error {
+                    completion(error)
+                    return
+                }
+                completion(nil)
+            }
         }
         
     }
     
-    private func uploadPhoto() {
+    private func uploadPhoto(image: UIImage?, userName:String, completion: @escaping (String?) -> Void) {
         let filename = UUID().uuidString
         
         // Conversao de um objeto img para um objeto binário
-        guard let data = image?.jpegData(compressionQuality: 0.2) else { return }
+        guard let data = image!.jpegData(compressionQuality: 0.2) else { return }
         
         let newMetadata = StorageMetadata()
         newMetadata.contentType = "image/jpg"
@@ -63,29 +46,29 @@ class SignUpViewModel: ObservableObject {
         ref.putData(data, metadata: newMetadata){
             metadata, error in
             if let error = error {
+                        completion(error.localizedDescription)
                         print("Erro no upload:", error.localizedDescription)
-                        self.isLoading = false
                         return
                     }
             
             ref.downloadURL { url, error in
                 if let error = error {
+                    completion(error.localizedDescription)
                     print("Erro ao pegar URL:", error.localizedDescription)
-                    self.isLoading = false
                     return
                 }
+                
                 guard let url = url else {
-                    self.isLoading = false
                     return
                 }
 
                 print("Upload sucesso:", url.absoluteString)
-                self.createUser(imageUrl: url)
+                self.createUser(imageUrl: url, name: userName, completion: completion)
             }
         }
     }
     
-    private func createUser(imageUrl: URL) {
+    private func createUser(imageUrl: URL, name:String, completion: @escaping (String?) -> Void) {
         let uid = Auth.auth().currentUser!.uid
         
         Firestore.firestore().collection("users")
@@ -95,14 +78,12 @@ class SignUpViewModel: ObservableObject {
                 "uuid": uid,
                 "profileUrl": imageUrl.absoluteString
             ]) { error in
-                self.isLoading = false
                 if let error = error {
-                    self.isLoading = false
                     print("Erro ao criar usuário:", error.localizedDescription)
+                    completion(error.localizedDescription)
                     return
                 }
                 print("Usuário criado com sucesso!")
             }
-        self.isLoading = false
     }
 }

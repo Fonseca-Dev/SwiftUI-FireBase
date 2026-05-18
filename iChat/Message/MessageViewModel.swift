@@ -9,7 +9,7 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 
-class MessagesViewModel:ObservableObject {
+class MessageViewModel:ObservableObject {
     
     @Published var isLoading:Bool = false
     @Published var contacts: [Contact] = []

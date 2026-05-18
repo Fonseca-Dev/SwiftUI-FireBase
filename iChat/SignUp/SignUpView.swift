@@ -10,7 +10,7 @@ import UIKit
 
 struct SignUpView: View {
     
-    @StateObject var viewModel = SignUpViewModel()
+    @StateObject var viewModel = SignUpViewModel(repo: SignUpRepository())
     @State var isShowPhotoLibrary: Bool = false
 
     var body: some View {
