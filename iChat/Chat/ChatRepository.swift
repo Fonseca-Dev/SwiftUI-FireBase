@@ -15,9 +15,12 @@ class ChatRepository {
     private var listener: ListenerRegistration?
     private var myName = ""
     private var myPhoto = ""
+    private var hasLoadedInitial = false
     
     func onAppear(
+        limit: Int,
         toContact: Contact,
+        lastMessage: Message?,
         completion: @escaping ([Message], String, String) -> Void
     ) {
         
@@ -36,47 +39,111 @@ class ChatRepository {
                 }
         }
         
-        // Cria listener apenas uma vez
-        if listener == nil {
-            listener = Firestore.firestore()
+        // PRIMEIRA CARGA: usa getDocuments (não listener)
+        if !hasLoadedInitial {
+            hasLoadedInitial = true
+            
+            Firestore.firestore()
                 .collection("chats")
                 .document(fromId)
                 .collection(toContact.uuid)
                 .order(by: "timestamp", descending: true)
-                .start(at: [self.messages.last?.timestamp ?? 9999999999999])
-                .limit(to: 10)
-                .addSnapshotListener { snapshot, _ in
+                .limit(to: limit)
+                .getDocuments { snapshot, _ in
                     
-                    guard let changes = snapshot?.documentChanges else { return }
+                    guard let documents = snapshot?.documents else { return }
                     
-                    for change in changes where change.type == .added {
-                        let doc = change.document
+                    self.messages = documents.map { doc in
                         let data = doc.data()
-                        
-                        let message = Message(
+                        return Message(
                             uuid: doc.documentID,
                             text: data["message"] as? String ?? "",
                             isMe: fromId == (data["fromId"] as? String ?? ""),
                             timestamp: data["timestamp"] as? UInt ?? 0
                         )
-                        
-                        // Evita duplicar
-                        if !self.messages.contains(where: { $0.uuid == message.uuid }) {
-                            
-                            // Mensagem nova (timestamp maior que a primeira) → topo
-                            if let firstTimestamp = self.messages.first?.timestamp,
-                               message.timestamp > firstTimestamp {
-                                self.messages.insert(message, at: 0)
-                            } else {
-                                // Mensagem antiga (paginação) → final
-                                self.messages.append(message)
-                            }
-                        }
                     }
+                    
                     completion(self.messages, self.myName, self.myPhoto)
+                    
+                    // Depois da primeira carga, inicia o listener para novas mensagens
+                    self.startListener(fromId: fromId, toId: toContact.uuid, completion: completion)
                 }
+            
+            return
         }
+        
+        // PAGINAÇÃO: carrega mais mensagens antigas
+        guard let lastTimestamp = lastMessage?.timestamp else { return }
+        
+        Firestore.firestore()
+            .collection("chats")
+            .document(fromId)
+            .collection(toContact.uuid)
+            .order(by: "timestamp", descending: true)
+            .start(after: [lastTimestamp])
+            .limit(to: limit)
+            .getDocuments { snapshot, _ in
+                
+                guard let documents = snapshot?.documents else { return }
+                
+                let newMessages = documents.map { doc -> Message in
+                    let data = doc.data()
+                    return Message(
+                        uuid: doc.documentID,
+                        text: data["message"] as? String ?? "",
+                        isMe: fromId == (data["fromId"] as? String ?? ""),
+                        timestamp: data["timestamp"] as? UInt ?? 0
+                    )
+                }
+                
+                self.messages.append(contentsOf: newMessages)
+                completion(self.messages, self.myName, self.myPhoto)
+            }
     }
+    
+    
+    // LISTENER: apenas para novas mensagens
+    private func startListener(
+        fromId: String,
+        toId: String,
+        completion: @escaping ([Message], String, String) -> Void
+    ) {
+        
+        guard listener == nil else { return }
+        
+        // Pega o timestamp da mensagem mais recente que você já tem
+        let lastTimestamp = self.messages.first?.timestamp ?? 0
+        
+        listener = Firestore.firestore()
+            .collection("chats")
+            .document(fromId)
+            .collection(toId)
+            .order(by: "timestamp", descending: false)
+            .whereField("timestamp", isGreaterThan: lastTimestamp)  // ← só mensagens NOVAS
+            .addSnapshotListener { snapshot, _ in
+                
+                guard let change = snapshot?.documentChanges.first else { return }
+                
+                if change.type == .added {
+                    let doc = change.document
+                    let data = doc.data()
+                    
+                    let message = Message(
+                        uuid: doc.documentID,
+                        text: data["message"] as? String ?? "",
+                        isMe: fromId == (data["fromId"] as? String ?? ""),
+                        timestamp: data["timestamp"] as? UInt ?? 0
+                    )
+                    
+                    // Só adiciona se for mensagem nova (não duplica)
+                    if !self.messages.contains(where: { $0.uuid == message.uuid }) {
+                        self.messages.insert(message, at: 0)
+                        completion(self.messages, self.myName, self.myPhoto)
+                    }
+                }
+            }
+    }
+    
     
     func sendMessage(
         toContact: Contact,
@@ -95,7 +162,6 @@ class ChatRepository {
             "timestamp": timestamp
         ]
         
-        // Salva para o remetente
         Firestore.firestore()
             .collection("chats")
             .document(fromId)
@@ -107,7 +173,6 @@ class ChatRepository {
                     return
                 }
                 
-                // Atualiza last-messages do remetente
                 Firestore.firestore()
                     .collection("last-messages")
                     .document(fromId)
@@ -122,7 +187,6 @@ class ChatRepository {
                     ])
             }
         
-        // Salva para o destinatário
         Firestore.firestore()
             .collection("chats")
             .document(toContact.uuid)
@@ -134,7 +198,6 @@ class ChatRepository {
                     return
                 }
                 
-                // Atualiza last-messages do destinatário
                 Firestore.firestore()
                     .collection("last-messages")
                     .document(toContact.uuid)
@@ -152,9 +215,11 @@ class ChatRepository {
             }
     }
     
+    
     func removeListener() {
         listener?.remove()
         listener = nil
+        hasLoadedInitial = false
+        messages.removeAll()
     }
-
 }

@@ -31,7 +31,7 @@ class ChatViewModel: ObservableObject {
     var myPhoto = ""
     var inserting: Bool = false
     var newCount: Int = 0
-    let limit = 10
+    let limit = 20
     
     private let repo: ChatRepository
     
@@ -39,10 +39,9 @@ class ChatViewModel: ObservableObject {
         self.repo = repo
     }
     
-    
     func onAppear(toContact: Contact){
         
-        repo.onAppear(toContact: toContact) { messages, name, photo in
+        repo.onAppear(limit: self.limit, toContact: toContact, lastMessage: self.messages.last) { messages, name, photo in
                 self.messages = messages
                 self.myName = name
                 self.myPhoto = photo
@@ -61,6 +60,7 @@ class ChatViewModel: ObservableObject {
         repo.sendMessage(toContact: toContact, message: message) { error in
             if let error = error {
                 print("Erro ao enviar mensagem:", error.localizedDescription)
+                return
             }
         }
     }

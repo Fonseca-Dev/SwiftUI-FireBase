@@ -23,7 +23,7 @@ class MessageViewModel:ObservableObject {
 
     
     func getContacts() {
-        isLoading = true
+        self.isLoading = true
         
         repo.getContacts { error, contacts in
             if let error = error {
