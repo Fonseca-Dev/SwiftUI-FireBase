@@ -50,8 +50,12 @@ class MessageRepository {
             }
     }
     
-    
     func logout() {
         try? Auth.auth().signOut()
+    }
+    
+    func removeListener() {
+        listener?.remove()
+        listener = nil
     }
 }

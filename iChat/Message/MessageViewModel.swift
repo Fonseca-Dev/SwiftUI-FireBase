@@ -40,4 +40,8 @@ class MessageViewModel:ObservableObject {
         repo.logout()
     }
     
+    func onDesapear(){
+        repo.removeListener()
+    }
+    
 }

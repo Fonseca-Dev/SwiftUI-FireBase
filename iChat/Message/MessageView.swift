@@ -26,6 +26,9 @@ struct MessageView: View {
             .onAppear() {
                 viewModel.getContacts()
             }
+            .onDisappear() {
+                viewModel.onDesapear()
+            }
             .navigationTitle("Mensagens")
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
@@ -36,6 +39,7 @@ struct MessageView: View {
                     }
                 }
             }
+            
         }
     }
 }

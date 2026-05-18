@@ -11,7 +11,7 @@ struct ChatView: View {
     
     let contact: Contact
     
-    @StateObject private var viewModel = ChatViewModel()
+    @StateObject private var viewModel = ChatViewModel(repo: ChatRepository())
     @State private var textSize: CGSize = .zero
     
     @Namespace private var bottomID // Serve para alocar um identificador unico para qualquer componente de View
@@ -100,6 +100,9 @@ struct ChatView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear() {
             viewModel.onAppear(toContact: contact)
+        }
+        .onDisappear() {
+            viewModel.onDesapear()
         }
     }
 }
